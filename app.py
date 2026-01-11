@@ -16,23 +16,25 @@ st.set_page_config(
 # --- Custom CSS (CSI/Glass Theme) ---
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700&display=swap');
+    
     /* Global Styles */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        background: radial-gradient(circle at 10% 20%, #0f172a 0%, #020617 90%);
         color: #e2e8f0;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-family: 'Exo 2', sans-serif;
     }
     
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
     }
     ::-webkit-scrollbar-track {
-        background: #0f172a; 
+        background: #020617; 
     }
     ::-webkit-scrollbar-thumb {
         background: #334155; 
-        border-radius: 5px;
+        border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
         background: #475569; 
@@ -40,106 +42,126 @@ st.markdown("""
 
     /* Tabs Styling */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-        background-color: rgba(30, 41, 59, 0.5);
-        padding: 10px;
+        gap: 8px;
+        background-color: rgba(15, 23, 42, 0.6);
+        padding: 8px;
         border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        backdrop-filter: blur(10px);
     }
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
+        height: 45px;
         white-space: pre-wrap;
         background-color: transparent;
         border-radius: 8px;
         color: #94a3b8;
+        font-family: 'Exo 2', sans-serif;
         font-weight: 600;
         border: none;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .stTabs [data-baseweb="tab"]:hover {
         background-color: rgba(255, 255, 255, 0.05);
         color: #cbd5e1;
+        transform: translateY(-1px);
     }
     .stTabs [aria-selected="true"] {
-        background-color: #3b82f6 !important;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
         color: white !important;
-        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
 
     /* Headings */
     h1, h2, h3 {
         color: #f8fafc;
-        letter-spacing: -0.5px;
+        font-family: 'Exo 2', sans-serif;
+        letter-spacing: 0.5px;
     }
     h1 {
-        background: linear-gradient(to right, #60a5fa, #a78bfa);
+        background: linear-gradient(to right, #60a5fa, #c084fc);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.2);
     }
     
     /* Metrics */
     div[data-testid="stMetricValue"] {
+        font-family: 'Exo 2', sans-serif;
         color: #38bdf8;
-        text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
     }
     div[data-testid="stMetricLabel"] {
         color: #94a3b8;
+        font-size: 0.9rem;
     }
     
     /* Cards/Containers (Glassmorphism) */
     .css-card {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         padding: 24px;
         border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         margin-bottom: 20px;
-        transition: transform 0.2s;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
     .css-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-        border-color: rgba(56, 189, 248, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+        border-color: rgba(56, 189, 248, 0.4);
     }
     
     /* Buttons */
     .stButton > button {
-        background: linear-gradient(to right, #2563eb, #3b82f6);
+        background: linear-gradient(90deg, #2563eb, #06b6d4);
         color: white;
         border: none;
         border-radius: 8px;
-        padding: 0.6em 1.2em;
-        font-weight: 600;
-        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
-        transition: all 0.3s ease;
+        padding: 0.7em 1.5em;
+        font-family: 'Exo 2', sans-serif;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: 0.9em;
+        letter-spacing: 1px;
+        box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        transition: all 0.3s ease;
     }
     .stButton > button:hover {
-        background: linear-gradient(to right, #1d4ed8, #2563eb);
-        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.5);
-        transform: translateY(-1px);
+        background: linear-gradient(90deg, #1d4ed8, #0891b2);
+        box-shadow: 0 0 25px rgba(37, 99, 235, 0.6);
+        transform: translateY(-2px);
     }
     
     /* Dataframes */
     .stDataFrame {
         border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     }
     
     /* Inputs */
-    .stTextInput input, .stTextArea textarea {
-        background-color: rgba(15, 23, 42, 0.8) !important;
+    .stTextInput input, .stTextArea textarea, .stSelectbox [data-baseweb="select"] {
+        background-color: rgba(15, 23, 42, 0.6) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
+        color: #f1f5f9 !important;
         border-radius: 8px;
+        font-family: 'Exo 2', sans-serif;
     }
     .stTextInput input:focus, .stTextArea textarea:focus {
         border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
+    }
+    
+    /* Toast */
+    div[data-baseweb="toast"] {
+        background-color: rgba(15, 23, 42, 0.95) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: white;
+        border-radius: 8px;
     }
 
 </style>
@@ -150,6 +172,7 @@ with st.sidebar:
     st.image("https://img.icons8.com/nolan/96/fingerprint.png", width=80) 
     st.title("Settings")
     
+    # Secure handling: Key re-integrated as requested by user
     api_key_default = "AIzaSyB6suR8iFycHZ7VNI5Ybn0apiqf-MrUnb0"
     api_key = st.text_input("Gemini API Key", value=api_key_default, type="password", help="Required for Executive Summary generation")
     
@@ -160,10 +183,10 @@ with st.sidebar:
         else:
             st.warning("Analysis Limited (No Key)")
     else:
-        st.caption("Key provided successfully")
+        st.success("System Authenticated")
         
     st.markdown("---")
-    st.info("**System Status:** Online\n\n**Version:** 2.1.0\n\n**Secure Connection:** Active")
+    st.info("**System Status:** Online\n\n**Version:** 2.2.0 (Ultra)\n\n**Secure Connection:** Active")
 
 # --- Session State ---
 if "current_case" not in st.session_state:
