@@ -1,0 +1,167 @@
+{
+  "case_id": "CASE-d4deb98a",
+  "description": {
+    "description": "A one-bedroom apartment was discovered in a state of disarray late at night. The main door showed signs of forced entry, with broken glass scattered on the floor. An overturned chair was found near the dining table, and multiple blood stains were visible on the carpet leading toward the bedroom.  Inside the bedroom, a blood-smeared knife was recovered near the bed. Muddy footprints were observed near the entrance and along the hallway, suggesting a possible escape route through the rear stairwell. No firearm evidence was found at the scene.",
+    "objects": [
+      "blood_stain",
+      "knife",
+      "footprint",
+      "broken_glass",
+      "chair",
+      "table",
+      "door"
+    ],
+    "scene_context": [
+      "indoor",
+      "bedroom"
+    ],
+    "forensic_clues": [
+      "forced entry or exit",
+      "footprints suggest movement or arrival path"
+    ]
+  },
+  "evidence_items": [
+    {
+      "id": "EV-2b5526ef-1",
+      "type": "blood_stain",
+      "location_text": "derived from scene text",
+      "description": "Detected blood_stain based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-2",
+      "type": "knife",
+      "location_text": "derived from scene text",
+      "description": "Detected knife based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-3",
+      "type": "footprint",
+      "location_text": "derived from scene text",
+      "description": "Detected footprint based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-4",
+      "type": "broken_glass",
+      "location_text": "derived from scene text",
+      "description": "Detected broken_glass based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-5",
+      "type": "chair",
+      "location_text": "derived from scene text",
+      "description": "Detected chair based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-6",
+      "type": "table",
+      "location_text": "derived from scene text",
+      "description": "Detected table based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-7",
+      "type": "door",
+      "location_text": "derived from scene text",
+      "description": "Detected door based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-2b5526ef-8",
+      "type": "forensic_clue",
+      "location_text": "contextual",
+      "description": "forced entry or exit",
+      "confidence": 0.85
+    },
+    {
+      "id": "EV-2b5526ef-9",
+      "type": "forensic_clue",
+      "location_text": "contextual",
+      "description": "footprints suggest movement or arrival path",
+      "confidence": 0.85
+    }
+  ],
+  "weapons": [
+    {
+      "weapon": "knife",
+      "confidence": 0.95,
+      "force_required": "medium",
+      "engagement_distance": "close-range",
+      "reason": "Knife evidence directly detected."
+    }
+  ],
+  "injuries": [
+    {
+      "injury": "significant bleeding",
+      "confidence": 0.9,
+      "lethality_probability": "medium–high",
+      "reason": "Blood evidence strongly supports injury."
+    }
+  ],
+  "suspect_hypotheses": [
+    {
+      "id": "SP-9e40b1",
+      "gender_probability": {
+        "male": 0.55,
+        "female": 0.35,
+        "unknown": 0.1
+      },
+      "age_range": "25–40",
+      "build": "medium",
+      "height_estimate_cm": "165–180",
+      "shoe_size_estimate": "8–10 US",
+      "dominant_hand": "right",
+      "experience_level": "low–moderate",
+      "likely_intent": "assault",
+      "possible_emotional_state": "agitated / impulsive",
+      "confidence": 0.45,
+      "reason": "Based on knife evidence, probable right-hand usage, medium build typical for single aggressor."
+    },
+    {
+      "id": "SP-262179",
+      "gender_probability": {
+        "male": 0.4,
+        "female": 0.5,
+        "unknown": 0.1
+      },
+      "age_range": "18–28",
+      "build": "slim",
+      "height_estimate_cm": "155–170",
+      "shoe_size_estimate": "6–8 US",
+      "dominant_hand": "unknown",
+      "experience_level": "low",
+      "likely_intent": "robbery / conflict",
+      "possible_emotional_state": "panic / stress",
+      "confidence": 0.28,
+      "reason": "Lighter build hypothesis due to limited physical disturbance at the scene."
+    }
+  ],
+  "timeline": [
+    {
+      "step": 1,
+      "event": "Suspect arrived at the scene",
+      "reason": "Movement or entry indicators detected"
+    },
+    {
+      "step": 2,
+      "event": "Weapon discharged or used",
+      "reason": "Ballistic or weapon evidence present"
+    },
+    {
+      "step": 3,
+      "event": "Victim sustained injuries",
+      "reason": "Blood evidence confirms impact"
+    },
+    {
+      "step": 4,
+      "event": "Suspect fled the scene",
+      "reason": "Footwear patterns indicate exit path"
+    }
+  ],
+  "executive_summary": "(Summary unavailable: API Quota Exceeded. Please try again later.)",
+  "risk_score": 6
+}
