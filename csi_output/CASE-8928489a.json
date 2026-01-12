@@ -1,0 +1,109 @@
+{
+  "case_id": "CASE-8928489a",
+  "description": {
+    "description": "A street-side jewellery store reported a break-in after the alarm system was triggered shortly after midnight. The front glass display window was shattered inward, and multiple jewellery items were reported missing.  Inside the store, glass shards were scattered across the floor. A trail of blood was observed leading from the display counter toward the storage room at the rear of the shop.  A metal crowbar and a single black glove were recovered near the safe. Blood smears were visible on the counter edge, and the cash register was found open.  Investigators noted signs of movement after injury, suggesting the suspect may have sustained a wound during the incident.",
+    "objects": [
+      "blood_stain",
+      "window"
+    ],
+    "scene_context": [
+      "outdoor",
+      "public"
+    ],
+    "forensic_clues": [
+      "movement after injury"
+    ]
+  },
+  "evidence_items": [
+    {
+      "id": "EV-56b12e1a-1",
+      "type": "blood_stain",
+      "location_text": "derived from scene text",
+      "description": "Detected blood_stain based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-56b12e1a-2",
+      "type": "window",
+      "location_text": "derived from scene text",
+      "description": "Detected window based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-56b12e1a-3",
+      "type": "forensic_clue",
+      "location_text": "contextual",
+      "description": "movement after injury",
+      "confidence": 0.85
+    }
+  ],
+  "weapons": [
+    {
+      "weapon": "unknown object",
+      "confidence": 0.35,
+      "force_required": "unknown",
+      "engagement_distance": "unknown",
+      "reason": "No direct weapon evidence — inferred only."
+    }
+  ],
+  "injuries": [
+    {
+      "injury": "significant bleeding",
+      "confidence": 0.4,
+      "lethality_probability": "medium–high",
+      "reason": "Blood evidence strongly supports injury."
+    }
+  ],
+  "suspect_hypotheses": [
+    {
+      "id": "SP-629c02",
+      "gender_probability": {
+        "male": 0.55,
+        "female": 0.35,
+        "unknown": 0.1
+      },
+      "age_range": "25–40",
+      "build": "medium",
+      "height_estimate_cm": "165–180",
+      "shoe_size_estimate": "unknown",
+      "dominant_hand": "unknown",
+      "experience_level": "low–moderate",
+      "likely_intent": "unknown",
+      "possible_emotional_state": "agitated / impulsive",
+      "confidence": 0.45,
+      "reason": "Based on knife evidence, probable right-hand usage, medium build typical for single aggressor."
+    },
+    {
+      "id": "SP-80c5a5",
+      "gender_probability": {
+        "male": 0.4,
+        "female": 0.5,
+        "unknown": 0.1
+      },
+      "age_range": "18–28",
+      "build": "slim",
+      "height_estimate_cm": "155–170",
+      "shoe_size_estimate": "unknown",
+      "dominant_hand": "unknown",
+      "experience_level": "low",
+      "likely_intent": "robbery / conflict",
+      "possible_emotional_state": "panic / stress",
+      "confidence": 0.28,
+      "reason": "Lighter build hypothesis due to limited physical disturbance at the scene."
+    }
+  ],
+  "timeline": [
+    {
+      "step": 1,
+      "event": "Suspect arrived at the scene",
+      "reason": "Movement or entry indicators detected"
+    },
+    {
+      "step": 2,
+      "event": "Victim sustained injuries",
+      "reason": "Blood evidence confirms impact"
+    }
+  ],
+  "executive_summary": "(Summary unavailable: API Quota Exceeded. Please try again later.)",
+  "risk_score": 0
+}

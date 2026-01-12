@@ -1,0 +1,124 @@
+{
+  "case_id": "CASE-8d197ca9",
+  "description": {
+    "description": "A narrow alleyway behind a commercial block was cordoned off after a late-night incident.\r A middle-aged male victim was found lying on the ground near a trash dumpster.\r A large pool of blood was present near the upper torso area.\r \r Two spent shell casings were recovered several feet from the body.\r A broken wristwatch and scattered personal items were found near the victim,\r while his wallet and mobile phone were missing.\r \r Faint shoe prints were visible on the damp concrete surface,\r leading toward the main road where skid marks suggested a rapid vehicle departure.\r No knife or blunt weapon was recovered at the scene.",
+    "objects": [
+      "blood_stain",
+      "knife",
+      "shell_casing"
+    ],
+    "scene_context": [
+      "outdoor",
+      "public"
+    ],
+    "forensic_clues": [
+      "pooled blood (injury occurred at location)"
+    ]
+  },
+  "evidence_items": [
+    {
+      "id": "EV-9a371163-1",
+      "type": "blood_stain",
+      "location_text": "derived from scene text",
+      "description": "Detected blood_stain based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-9a371163-2",
+      "type": "knife",
+      "location_text": "derived from scene text",
+      "description": "Detected knife based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-9a371163-3",
+      "type": "shell_casing",
+      "location_text": "derived from scene text",
+      "description": "Detected shell_casing based on description or image.",
+      "confidence": 0.75
+    },
+    {
+      "id": "EV-9a371163-4",
+      "type": "forensic_clue",
+      "location_text": "contextual",
+      "description": "pooled blood (injury occurred at location)",
+      "confidence": 0.85
+    }
+  ],
+  "weapons": [
+    {
+      "weapon": "knife",
+      "confidence": 0.85,
+      "force_required": "medium",
+      "engagement_distance": "close-range",
+      "reason": "Knife evidence directly detected."
+    },
+    {
+      "weapon": "firearm",
+      "confidence": 0.85,
+      "force_required": "high",
+      "engagement_distance": "short–medium range",
+      "reason": "Shell casing or firearm markers detected."
+    }
+  ],
+  "injuries": [
+    {
+      "injury": "significant bleeding",
+      "confidence": 0.8,
+      "lethality_probability": "medium–high",
+      "reason": "Blood evidence strongly supports injury."
+    }
+  ],
+  "suspect_hypotheses": [
+    {
+      "id": "SP-1f47e9",
+      "gender_probability": {
+        "male": 0.55,
+        "female": 0.35,
+        "unknown": 0.1
+      },
+      "age_range": "25–40",
+      "build": "medium",
+      "height_estimate_cm": "165–180",
+      "shoe_size_estimate": "unknown",
+      "dominant_hand": "right",
+      "experience_level": "low–moderate",
+      "likely_intent": "assault",
+      "possible_emotional_state": "agitated / impulsive",
+      "confidence": 0.45,
+      "reason": "Based on knife evidence, probable right-hand usage, medium build typical for single aggressor."
+    },
+    {
+      "id": "SP-1b8282",
+      "gender_probability": {
+        "male": 0.4,
+        "female": 0.5,
+        "unknown": 0.1
+      },
+      "age_range": "18–28",
+      "build": "slim",
+      "height_estimate_cm": "155–170",
+      "shoe_size_estimate": "unknown",
+      "dominant_hand": "unknown",
+      "experience_level": "low",
+      "likely_intent": "robbery / conflict",
+      "possible_emotional_state": "panic / stress",
+      "confidence": 0.28,
+      "reason": "Lighter build hypothesis due to limited physical disturbance at the scene."
+    }
+  ],
+  "timeline": [
+    {
+      "step": 1,
+      "event": "Weapon discharged or used",
+      "reason": "Ballistic or weapon evidence present"
+    },
+    {
+      "step": 2,
+      "event": "Victim sustained injuries",
+      "reason": "Blood evidence confirms impact"
+    }
+  ],
+  "executive_summary": "(Summary unavailable: API Quota Exceeded. Please try again later.)",
+  "risk_score": 1
+}

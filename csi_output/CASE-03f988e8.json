@@ -1,0 +1,68 @@
+{
+  "case_id": "CASE-03f988e8",
+  "description": "Officer Log: A remote single-room warehouse on the outskirts of the city was discovered\nafter a missing-person report led investigators to the location.\nThe main entrance door was locked from the outside using a metal chain.\n\nInside the room, a single chair was positioned at the center,\nwith restraints attached to its arms.\nMultiple blood stains were observed beneath and behind the chair,\nalong with drag marks extending toward a side exit.\n\nA blunt metal rod and a length of rope were found discarded near the wall.\nSeveral empty water bottles and food wrappers were scattered on the floor,\nsuggesting the victim may have been held at the location for an extended period.\n\nFootprints of different shoe sizes were identified near the entrance,\nwhile only one distinct footwear pattern led away from the side exit.\nNo firearms were recovered at the scene.\n\n\nVisual Forensics Data:\n",
+  "visual_analysis": "",
+  "evidence_items": [
+    {
+      "type": "blood_stain",
+      "description": "Detected blood",
+      "confidence": 0.7,
+      "location": "scene"
+    }
+  ],
+  "weapons": [
+    {
+      "weapon": "unknown_object",
+      "confidence": 0.35,
+      "reason": "No direct weapon evidence — inferred only."
+    }
+  ],
+  "injuries": [
+    {
+      "injury": "bleeding_wound",
+      "lethality_probability": "medium",
+      "reason": "Blood evidence present"
+    }
+  ],
+  "suspect_hypotheses": [
+    {
+      "age_range": "25-40",
+      "build": "medium",
+      "reason": "Standard statistical profile for this weapon type."
+    },
+    {
+      "age_range": "18-25",
+      "build": "athletic",
+      "reason": "Alternative: impulsive action typically associated with younger demographics."
+    }
+  ],
+  "victim_profile": {
+    "risk_level": "Unknown",
+    "demographics_inferred": "Unknown",
+    "relation_to_suspect_hypothesis": "Undetermined",
+    "notes": "Insufficient data."
+  },
+  "timeline": [
+    {
+      "step": 1,
+      "event": "Suspect arrived at the scene",
+      "reason": "Movement or entry indicators detected"
+    },
+    {
+      "step": 2,
+      "event": "Victim sustained injuries",
+      "reason": "Blood evidence confirms impact"
+    },
+    {
+      "step": 3,
+      "event": "Suspect fled the scene",
+      "reason": "Absence of suspect; open exit paths"
+    }
+  ],
+  "gis_location": {
+    "lat": 40.66334397558012,
+    "lon": -73.99852744625727
+  },
+  "executive_summary": "(Analysis Failed: HTTP 404: {\"error\":{\"message\":\"No endpoints found for meta-llama/llama-3.2-11b-vision-instruct:free.\",\"code\":404},\"user_id\":\"user_38AR9X3dADJNQFdF5SsgXYt4h1i\"})",
+  "risk_score": 5
+}
