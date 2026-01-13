@@ -5,6 +5,7 @@ import csi_backend as csi
 import os
 import time
 
+# (Triggers Reload)
 # --- Page Config ---
 st.set_page_config(
     page_title="AI Crime Scene Investigator",
@@ -12,6 +13,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# --- Session State (Must be initialized before Sidebar usage) ---
+if "current_case" not in st.session_state:
+    st.session_state.current_case = None
 
 # --- Custom CSS (CSI/Glass Theme) ---
 st.markdown("""
@@ -176,33 +181,40 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- Configuration Sidebar ---
+# --- Configuration Sidebar (Rewritten for ChatGPT Style) ---
 with st.sidebar:
     st.image("https://img.icons8.com/nolan/96/fingerprint.png", width=80) 
-    st.title("Settings")
+    st.title("Case History")
     
-    # Secure handling: Key re-integrated as requested by user
-    api_key_default = "AIzaSyB6suR8iFycHZ7VNI5Ybn0apiqf-MrUnb0"
-    api_key = st.text_input("Gemini API Key", value=api_key_default, type="password", help="Required for Executive Summary generation")
-    
-    if not api_key:
-        api_key = os.environ.get("GOOGLE_API_KEY")
-        if api_key:
-            st.success("Key active (Env)")
-        else:
-            st.warning("Analysis Limited (No Key)")
-    else:
-        st.success("System Authenticated")
-        
+# 1. Dynamic History List
+    df_cases = csi.list_all_cases_df()
+    if not df_cases.empty:
+        st.markdown("<div style='font-size: 0.8em; color: #94a3b8; margin-top: 20px; margin-bottom: 10px;'>RECENT CASES</div>", unsafe_allow_html=True)
+        # Iterate desc (newest first)
+        for idx, row in df_cases.iterrows():
+            # Create a label (concise)
+            c_label = f"{row['case_id'][:8]}.. | {row['mem_primary_weapon'][:8]}"
+            
+            # Style differently if active
+            btn_type = "primary" if st.session_state.current_case and st.session_state.current_case.get("case_id") == row['case_id'] else "secondary"
+            
+            # Compact buttons
+            if st.button(c_label, key=f"sidebar_case_{row['case_id']}", use_container_width=True, type=btn_type):
+                full_state = csi.case_manager.get_session(row['case_id'])
+                if full_state and "case:aggregate" in full_state:
+                    res = {
+                        "case_id": row['case_id'],
+                        "aggregate": full_state["case:aggregate"],
+                        "json_path": csi.OUT_DIR / f"{row['case_id']}.json",
+                        "pdf_path": csi.OUT_DIR / f"{row['case_id']}.pdf"
+                    }
+                    st.session_state.current_case = res
+                    st.rerun()
+
     st.markdown("---")
     st.info("**System Status:** Online\n\n**Version:** 2.2.0 (Ultra)\n\n**Secure Connection:** Active")
 
-# --- Session State ---
-if "current_case" not in st.session_state:
-    st.session_state.current_case = None
-
 # --- UI Components ---
-
 def render_metric_card(label, value, color="blue", subtext=None):
     st.markdown(f"""
     <div class="css-card">
@@ -249,6 +261,35 @@ def display_case(result, show_input=False):
                 <div style="font-size: 0.85em; color: #7dd3fc; white-space: pre-wrap; margin-top: 5px;">{vis_analysis}</div>
             </div>
             """, unsafe_allow_html=True)
+            
+        # Update / Append Button (ChatGPT Style - Add to Context)
+        if st.toggle("✏️ Update / Add Evidence"):
+            with st.form(f"update_form_{case_id}"):
+                new_notes = st.text_area("Additional Notes / Changes", placeholder="Update scenario details...")
+                new_files = st.file_uploader("Add New Media", accept_multiple_files=True)
+                
+                if st.form_submit_button("🔄 Update Case Analysis"):
+                    # MERGE LOGIC: Combine old text + new text.
+                    # Ideally, backend handles context window, but for now we append.
+                    combined_text = scene_text + "\n\n[UPDATED LOG]: " + new_notes if new_notes else scene_text
+                    
+                    with st.spinner("Updating case files..."):
+                         img_paths = []
+                         if new_files:
+                             uploads_dir = Path("uploads")
+                             uploads_dir.mkdir(exist_ok=True)
+                             for uf in new_files:
+                                 path = uploads_dir / uf.name
+                                 with open(path, "wb") as f:
+                                     f.write(uf.getbuffer())
+                                 img_paths.append(str(path))
+                         
+                         # CALL BACKEND WITH EXISTING ID
+                         upd_result = csi.run_full_investigation(combined_text, img_paths, case_id=case_id)
+                         st.session_state.current_case = upd_result
+                         st.toast(f"Case {case_id} updated!", icon="🔄")
+                         time.sleep(1)
+                         st.rerun()
 
     with r1c2:
         # Risk & Executive Summary Split
@@ -414,10 +455,18 @@ def display_case(result, show_input=False):
                 st.download_button("📄 Export PDF", f, file_name=f"{case_id}.pdf", mime="application/pdf", use_container_width=True)
         except:
             pass
+            
+    # Delete Option in View
+    if st.button("🗑️ Delete This Case", key=f"del_main_{case_id}", type="secondary"):
+        csi.case_manager.delete_session(case_id)
+        st.session_state.current_case = None
+        st.toast("Case deleted.")
+        time.sleep(0.5)
+        st.rerun()
 
 # --- Top Navigation ---
 st.title("AI CRIME SCENE INVESTIGATOR")
-tabs = st.tabs(["📊 Dashboard", "🕵️ New Investigation", "🗃️ Archives", "🧠 Neural Query"])
+tabs = st.tabs(["📊 Dashboard", "🕵️ Investigation", "🧠 Neural Query"])
 
 # --- TAB 1: DASHBOARD ---
 with tabs[0]:
@@ -479,17 +528,12 @@ with tabs[0]:
     else:
         st.info("System initialized. No case data available.")
 
-# --- TAB 2: NEW INVESTIGATION ---
+# --- TAB 2: INVESTIGATION (Dynamic) ---
 with tabs[1]:
     st.markdown("<br>", unsafe_allow_html=True)
     
     # Logic: If case exists, show RESULTS MODE. Else, show INPUT MODE.
     if st.session_state.current_case:
-        # --- RESULTS MODE ---
-        if st.button("⬅ Start New Investigation", type="secondary"):
-            st.session_state.current_case = None
-            st.rerun()
-            
         display_case(st.session_state.current_case, show_input=True)
         
     else:
@@ -526,7 +570,8 @@ with tabs[1]:
                                     f.write(uf.getbuffer())
                                 img_paths.append(str(path))
                         
-                        result = csi.run_full_investigation(scene_text, img_paths, api_key=api_key)
+                        # New Case -> No ID passed, backend generates one
+                        result = csi.run_full_investigation(scene_text, img_paths)
                         st.session_state.current_case = result
                         st.rerun()
 
@@ -539,39 +584,8 @@ with tabs[1]:
             </div>
             """, unsafe_allow_html=True)
 
-# --- TAB 3: ARCHIVES ---
+# --- TAB 3: MEMORY ---
 with tabs[2]:
-    st.markdown("<br>", unsafe_allow_html=True)
-    df = csi.list_all_cases_df()
-    
-    if not df.empty:
-        c1, c2 = st.columns([1, 3])
-        with c1:
-            st.markdown("### Select Case")
-            case_id = st.selectbox("Identifier", df["case_id"].tolist(), label_visibility="collapsed")
-            if st.button("Load Archival Data", use_container_width=True):
-                full_state = csi.case_manager.get_session(case_id)
-                if full_state and "case:aggregate" in full_state:
-                    res = {
-                        "case_id": case_id,
-                        "aggregate": full_state["case:aggregate"],
-                        "json_path": csi.OUT_DIR / f"{case_id}.json",
-                        "pdf_path": csi.OUT_DIR / f"{case_id}.pdf"
-                    }
-                    st.session_state.view_case = res
-                else:
-                    st.error("Data integrity error.")
-        
-        with c2:
-            if "view_case" in st.session_state:
-                display_case(st.session_state.view_case)
-            else:
-                st.info("Select a case from the menu to view details.")
-    else:
-        st.write("Archive empty.")
-
-# --- TAB 4: MEMORY ---
-with tabs[3]:
     st.markdown("<br>", unsafe_allow_html=True)
     c1, c2 = st.columns([1,2])
     
@@ -589,10 +603,6 @@ with tabs[3]:
             
             # Widget (Appears "inside" or attached to the card due to styling)
             case_id = st.selectbox("Active Case Context", df["case_id"].tolist(), label_visibility="collapsed")
-            
-            # Closer div to complete the visual if needed, or just let it hang as users inputs often float
-            # However, to make it look "inside", we can't wrap it. 
-            # We used a visual trick: Top card (Head) + Input (Body).
             
         with c2:
             st.markdown("""

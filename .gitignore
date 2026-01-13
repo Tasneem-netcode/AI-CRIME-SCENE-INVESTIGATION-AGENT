@@ -1,0 +1,13 @@
+.env
+.venv
+__pycache__
+csi_output/
+*.pyc
+*.db
+# Uploads / outputs
+uploads/
+csi_output/
+download.pdf
+# OS
+.DS_Store
+Thumbs.db

@@ -14,11 +14,16 @@ import google.generativeai as genai
 import textwrap
 import time
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # --- Configuration & Setup ---
 APP_NAME = "CSI_APP"
 DB_FILE = "csi_app.db"
 # User provided key for OpenRouter / Gemini 2.0 Flash
-OPENROUTER_API_KEY = "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"
+# User provided key for OpenRouter / Gemini 2.0 Flash
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "").strip()
 OPENROUTER_MODEL = "google/gemini-2.0-flash-exp:free"
 
 # Ensure output directory exists
@@ -136,98 +141,94 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode('utf-8')
 
 
-# Fallback models in order of preference (Updated to valid OpenRouter IDs)
-FALLBACK_MODELS = [
-    "google/gemini-2.0-flash-exp:free",      # Primary User Request
-    "google/gemini-exp-1206:free",           # Experimental Fallback
-    "google/gemini-flash-1.5",               # Robust Standard Model
-    "meta-llama/llama-3.2-11b-vision-instruct:free" # Reliable Vision Backup
-]
+# --- OpenRouter integration (Strict) ---
+
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
 
 def analyze_image_openrouter(image_path):
-    """Real Computer Vision using Gemini 2.0 Flash via OpenRouter (With Fallback)"""
+    """Real Computer Vision using Gemini 2.0 Flash via OpenRouter"""
     try:
         base64_image = encode_image(image_path)
         
         headers = {
             "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://localhost:8501"
+            "HTTP-Referer": "https://localhost:8501",
+            "X-Title": APP_NAME
         }
         
-        # Try models in sequence
-        last_error = "Unknown Error"
+        # User requested specific model
+        model = "google/gemini-2.0-flash-exp:free"
         
-        for model in FALLBACK_MODELS:
-            try:
-                payload = {
-                    "model": model,
-                    "messages": [
+        payload = {
+            "model": model,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": "Analyze this forensic image. Identify objects, signs of struggle, weapons, or forensic clues. Be concise but detailed."},
                         {
-                            "role": "user",
-                            "content": [
-                                {"type": "text", "text": "Analyze this forensic image. Identify objects, signs of struggle, weapons, or forensic clues. Be concise but detailed."},
-                                {
-                                    "type": "image_url",
-                                    "image_url": {
-                                        "url": f"data:image/jpeg;base64,{base64_image}"
-                                    }
-                                }
-                            ]
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                            }
                         }
                     ]
                 }
-                
-                response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=20)
-                
-                if response.status_code == 200:
-                    return response.json()['choices'][0]['message']['content']
+            ]
+        }
+        
+        try:
+            # 60 timeout for vision
+            response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=60)
+            
+            if response.status_code == 200:
+                data = response.json()
+                if 'choices' in data and len(data['choices']) > 0:
+                    return data['choices'][0]['message']['content']
                 else:
-                    last_error = f"{response.status_code} - {response.text}"
-                    # If 429 (Rate Limit) or 5xx, try next model. If 400/401, probably fatal, but we'll try anyway.
-                    time.sleep(1) # Brief pause before retry
-                    continue
-            except Exception as e:
-                last_error = str(e)
-                continue
-                
-        # If we get here, all failed
-        return f"[Vision Analysis Failed: {last_error} (All models tried)]"
+                    return f"[Analysis Empty: {json.dumps(data)}]"
+            else:
+                return f"[Analysis Failed: {response.status_code} - {response.text}]"
+
+        except Exception as e:
+            return f"[Connection Error: {str(e)}]"
             
     except Exception as e:
-        return f"[Vision System Error: {str(e)}]"
+        return f"[System Error: {str(e)}]"
 
 def call_openrouter_text(prompt):
-    """Text generation using Gemini 2.0 Flash (With Fallback)"""
+    """Text generation using Gemini 2.0 Flash via OpenRouter"""
     try:
         headers = {
             "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json",
             "HTTP-Referer": "https://localhost:8501", 
+            "X-Title": APP_NAME
         }
         
-        last_error = ""
+        model = "google/gemini-2.0-flash-exp:free"
         
-        for model in FALLBACK_MODELS:
-            payload = {
-                "model": model,
-                "messages": [{"role": "user", "content": prompt}]
-            }
+        payload = {
+            "model": model,
+            "messages": [{"role": "user", "content": prompt}]
+        }
+        
+        try:
+            response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=60)
             
-            try:
-                response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=20)
-                
-                if response.status_code == 200:
-                    return response.json()['choices'][0]['message']['content']
-                else:
-                    last_error = f"HTTP {response.status_code}: {response.text}"
-                    time.sleep(1)
-                    continue
-            except Exception as e:
-                last_error = f"Exception: {str(e)}"
-                continue
-        
-        return f"(Analysis Failed: {last_error})"
+            if response.status_code == 200:
+                data = response.json()
+                if 'choices' in data and len(data['choices']) > 0:
+                    return data['choices'][0]['message']['content']
+            
+            return f"(Analysis Failed: {response.status_code} - {response.text})"
+            
+        except Exception as e:
+            return f"(Connection Error: {str(e)})"
+
     except Exception as e:
         return f"(System Error: {str(e)})"
 
@@ -438,13 +439,13 @@ def run_full_investigation(scene_text: str, image_paths=None, case_id=None, api_
     # Base score on evidence count
     score += min(len(evidence_items), 4) 
     
-    # Weapon lethality
+    # Weapon lethality (Adjusted for higher sensitivity)
     weapons = aggregate["weapons"]
     if weapons:
         w_conf = weapons[0].get("confidence", 0)
-        if weapons[0]["weapon"] == "firearm": score += 4
-        elif weapons[0]["weapon"] == "bladed_object": score += 3
-        else: score += 1
+        if weapons[0]["weapon"] == "firearm": score += 6
+        elif weapons[0]["weapon"] == "bladed_object": score += 4
+        else: score += 2
     
     # Injury presence
     injuries = aggregate["injuries"]

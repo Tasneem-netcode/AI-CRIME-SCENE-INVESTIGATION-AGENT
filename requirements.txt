@@ -3,3 +3,4 @@ pandas
 fpdf
 google-generativeai
 pytest
+python-dotenv

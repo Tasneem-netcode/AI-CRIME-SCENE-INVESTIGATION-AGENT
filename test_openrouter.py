@@ -1,7 +1,8 @@
-import requests
-import json
+import os
+from dotenv import load_dotenv
 
-OPENROUTER_API_KEY = "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"
+load_dotenv()
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_MODEL = "google/gemini-2.0-flash-exp:free"
 
 def test_connection():
