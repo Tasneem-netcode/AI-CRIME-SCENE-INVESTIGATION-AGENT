@@ -1,9 +1,19 @@
-.env
-.venv
-__pycache__
-csi_output/
+# Python cache
+__pycache__/
 *.pyc
+
+# Environment variables
+.env
+
+# Databases
 *.db
+*.sqlite
+*.sqlite3
+
+# Virtual environments
+.venv/
+venv/
+
 # Uploads / outputs
 uploads/
 csi_output/
